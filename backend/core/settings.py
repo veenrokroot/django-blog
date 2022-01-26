@@ -67,11 +67,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
-DATABASE_NAME = None
-DATABASE_USER = None
-DATABASE_PASSWORD = None
-DATABASE_HOST = None
-DATABASE_PORT = None
+DATABASE_NAME = env.str('DATABASE_NAME')
+DATABASE_USER = env.str('DATABASE_USER')
+DATABASE_PASSWORD = env.str('DATABASE_PASSWORD')
+DATABASE_HOST = env.str('DATABASE_HOST')
+DATABASE_PORT = env.str('DATABASE_PORT')
 
 DATABASES = {
     'default': {
@@ -116,6 +116,10 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentications.
+AUTHENTICATION_BACKENDS = (
+    'src.accounts.backends.EmailCaseInsensitiveAndPasswordBackendAuthentication',
+    'src.accounts.backends.UsernameCaseInsensitiveAndPasswordBackendAuthentication',
+)
 AUTH_USER_MODEL = 'accounts.User'
 
 USER_USERNAME_MINIMUM_LENGTH = 3

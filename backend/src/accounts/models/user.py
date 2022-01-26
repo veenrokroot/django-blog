@@ -1,9 +1,9 @@
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as DjangoUserManager
-from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from src.accounts import validators
@@ -28,11 +28,11 @@ class UserManager(DjangoUserManager):
         return user
 
     def get_by_natural_key(self, username: str = None, email: str = None):
-        assert username is not None or email is not None
+        assert username is not None or email is not None, ValueError('Username or E-mail is not None')
         if username is not None:
-            return self.get(**{self.model.USERNAME_FIELD: username})
+            return self.get(**{f'{self.model.USERNAME_FIELD}__iexact': username})
         elif email is not None:
-            return self.get(**{self.model.EMAIL_FIELD: email})
+            return self.get(**{f'{self.model.EMAIL_FIELD}__iexact': email})
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -42,7 +42,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
         verbose_name=_('Username'),
         help_text=_('Обязательно.'),
-        max_length=32,
+        unique=True,
+        max_length=settings.USER_USERNAME_MAXIMUM_LENGTH,
         validators=(
             validators.user.username_minimum_length_validator,
             validators.user.username_minimum_length_validator,

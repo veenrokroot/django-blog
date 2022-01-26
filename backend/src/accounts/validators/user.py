@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-UserModel = get_user_model()
-
 
 def username_unique_validator(username: str):
     """
@@ -14,6 +12,8 @@ def username_unique_validator(username: str):
     :param username: username пользователя.
     :return:
     """
+    UserModel = get_user_model()
+
     msg = _('Пользователь с таким username уже существует')
     code = 'username_unique'
     try:
@@ -88,6 +88,7 @@ def email_unique_validator(email: str):
     :param email: E-mail пользователя.
     :return:
     """
+    UserModel = get_user_model()
     msg = _('Пользователь с таким E-mail уже существует')
     code = 'email_unique'
     try:
