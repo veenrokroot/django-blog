@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "django-blog"
+version = "0.1.0"
+description = ""
+authors = ["veenrokroot <veenrokdalv@protonmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "4"
+python-environ = "^0.4.54"
+psycopg2-binary = "^2.9.3"
+django-bootstrap-v5 = "^1.0.8"
+django-rest-framework = "^0.1.0"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
