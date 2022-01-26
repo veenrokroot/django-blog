@@ -13,32 +13,26 @@ ENV_PATH = BASE_DIR.joinpath('.env')
 env = Env()
 env.read_env(str(ENV_PATH))
 
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG_MODE')
 
-if DEBUG:
-    ALLOWED_HOSTS = (
-        '127.0.0.1',
-    )
-else:
-    ALLOWED_HOSTS = (
+ALLOWED_HOSTS = ('127.0.0.1',)
 
-    )
 
 # Application definition
-
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
+
+    'src.accounts.apps.AccountsConfig',
+)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -121,4 +115,10 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Authentications.
+AUTH_USER_MODEL = 'accounts.User'
 
+USER_USERNAME_MINIMUM_LENGTH = 3
+USER_USERNAME_MAXIMUM_LENGTH = 32
+USER_USERNAME_VALID_FIRST_SYMBOL_REGEX = r'^[a-zA-Z_]$'
+USER_USERNAME_VALID_CHARACTERS_REGEX = r'^[a-zA-Z_0-9]*$'
