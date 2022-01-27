@@ -4,6 +4,7 @@ Django version 4.0.1
 
 from pathlib import Path
 
+from django.urls import reverse_lazy
 from environ import Env
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -111,6 +112,11 @@ STATIC_ROOT = BASE_DIR.joinpath('static')
 # Media files.
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media')
+
+
+LOGIN_URL = reverse_lazy('accounts:sign-in')
+LOGIN_REDIRECT_URL = reverse_lazy('accounts:settings')
+LOGOUT_REDIRECT_URL = reverse_lazy('accounts:sign-in')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

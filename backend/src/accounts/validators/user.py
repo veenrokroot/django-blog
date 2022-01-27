@@ -50,7 +50,6 @@ def username_first_symbol_validator(username: str):
     """
     msg = _('Username должен начинаться с латинской буквы или символа _')
     code = 'username_invalid'
-
     if not re.match(settings.USER_USERNAME_VALID_FIRST_SYMBOL_REGEX, username[0]):
         raise ValidationError(message=msg, code=code)
     return None

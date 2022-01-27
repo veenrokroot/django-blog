@@ -1,5 +1,6 @@
 from django.apps import apps
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
@@ -17,10 +18,7 @@ class UserManager(DjangoUserManager):
         if not username:
             raise ValueError('The given username must be set')
         email = self.normalize_email(email)
-        # Lookup the real model class from the global app registry so this
-        # manager method can be used in migrations. This is fine because
-        # managers are by definition working on the real model.
-        UserModel = apps.get_model(self.model._meta.app_label, self.model._meta.object_name)
+        UserModel = get_user_model()
         username = UserModel.normalize_username(username)
         user = self.model(username=username, email=email, **extra_fields)
         user.password = make_password(password)
@@ -43,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_('Username'),
         help_text=_('Обязательно.'),
         unique=True,
-        max_length=32,
+        max_length=settings.USER_USERNAME_MAXIMUM_LENGTH,
         validators=(
             validators.user.username_minimum_length_validator,
             validators.user.username_maximum_length_validator,
@@ -52,7 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
             validators.user.username_unique_validator,
         ),
         error_messages={
-            'max_length': None
+            'max_length': None,
+            'unique': None
         }
     )
     email = models.EmailField(
@@ -60,7 +59,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_('Обязательно.'),
         validators=(
             validators.user.email_unique_validator,
-        )
+        ),
+        error_messages={
+            'unique': None,
+        }
     )
 
     is_staff = models.BooleanField(
