@@ -67,6 +67,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_('Статус персонала'),
         help_text=_('Можно настроить доступ к админ-панеле сайта')
     )
+    is_active = models.BooleanField(
+        verbose_name=_('Активирован'),
+        help_text=_('Используйте данное поле для деактивации аккаунта, вместо удаления.'),
+        default=True
+    )
 
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
