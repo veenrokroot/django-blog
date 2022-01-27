@@ -10,7 +10,7 @@ class ChangeUsernameView(LoginRequiredMixin, FormView):
     Страница смены username пользователя.
     """
     template_name = 'accounts/account/change-username.html'
-    form_class = forms.auth.ChangeUsernameForm
+    form_class = forms.account.ChangeUsernameForm
     success_url = reverse_lazy('accounts:settings')
 
     def get_form_kwargs(self):

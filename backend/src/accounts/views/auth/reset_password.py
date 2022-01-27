@@ -12,11 +12,6 @@ class ResetPasswordView(FormView):
     form_class = forms.auth.ResetPasswordForm
     success_url = settings.LOGIN_REDIRECT_URL
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
     def form_valid(self, form):
         user = form.get_user()
         # Логика отправки ссылки для сброса пароля

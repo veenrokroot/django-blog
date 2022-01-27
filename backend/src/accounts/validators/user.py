@@ -96,3 +96,4 @@ def email_unique_validator(email: str):
         return None
     else:
         raise ValidationError(message=msg, code=code)
+

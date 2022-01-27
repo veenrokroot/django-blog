@@ -12,11 +12,6 @@ class SignUpView(LogoutRequiredMixin, FormView):
     form_class = forms.auth.SignUpForm
     success_url = settings.LOGIN_URL
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)

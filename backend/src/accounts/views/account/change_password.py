@@ -11,7 +11,7 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
     Страница смены password пользователя.
     """
     template_name = 'accounts/account/change-password.html'
-    form_class = forms.auth.ChangeUsernameForm
+    form_class = forms.account.ChangePasswordForm
     success_url = settings.LOGOUT_REDIRECT_URL
 
     def get_form_kwargs(self):

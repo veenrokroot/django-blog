@@ -26,7 +26,8 @@ class ChangePasswordForm(forms.Form):
 
     error_messages = {
         'password_invalid': _('Неверный пароль'),
-        'passwords_not_match': _('Пароли не совпадают')
+        'passwords_not_match': _('Пароли не совпадают'),
+        'new_password_equal_old_password': _('Новый пароль совпадает со старым')
     }
 
     class Meta:
@@ -37,24 +38,32 @@ class ChangePasswordForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean_old_password(self):
-        old_password = self.cleaned_data['old_password']
-        if self.request.user.check_password(raw_password=old_password):
+        old_password = self.cleaned_data.get('old_password')
+        if not self.request.user.check_password(raw_password=old_password):
             raise ValidationError(message=self.error_messages['password_invalid'], code='password_invalid')
         return old_password
 
-    def clean_new_password(self):
-        new_password = self.cleaned_data['new_password']
-        validate_password(password=new_password)
-        return new_password
-
     def clean_repeat_new_password(self):
-        new_password = self.cleaned_data['new_password']
-        repeat_new_password = self.cleaned_data['repeat_new_password']
+        new_password = self.cleaned_data.get('new_password')
+        repeat_new_password = self.cleaned_data.get('repeat_new_password')
         if new_password != repeat_new_password:
             raise ValidationError(message=self.error_messages['passwords_not_match'], code='passwords_not_match')
 
         return repeat_new_password
 
+    def clean_new_password(self):
+        old_password = self.cleaned_data.get('old_password')
+        new_password = self.cleaned_data.get('new_password')
+        if new_password == old_password:
+            raise ValidationError(
+                message=self.error_messages['new_password_equal_old_password'],
+                code='new_password_equal_old_password'
+            )
+
+        validate_password(password=new_password)
+        return new_password
+
     def save(self):
         new_password = self.cleaned_data['new_password']
         self.request.user.set_password(raw_password=new_password)
+        self.request.user.save()

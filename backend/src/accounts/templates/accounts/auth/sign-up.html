@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-
+<form method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button>Зарегистрироваться</button>
+</form>
+<span>Уже есть аккаунт? <a href="{% url 'accounts:sign-in' %}">Вход</a></span>
 </body>
 </html>

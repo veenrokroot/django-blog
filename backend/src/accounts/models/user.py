@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as DjangoUserManager
 from django.db import models
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 from src.accounts import validators
 

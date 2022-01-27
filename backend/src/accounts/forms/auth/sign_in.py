@@ -39,8 +39,8 @@ class SignInForm(forms.ModelForm):
         if self.user_cache is None or not self.user_cache.is_authenticated:
             self.user_cache = authenticate(self.request, email=login, password=password)
 
-        if self.user_cache is None or not self.user_cache.is_authenticated:
-            raise ValidationError(message=self.error_messages['login_invalid'], code='login_invalid')
+            if self.user_cache is None or not self.user_cache.is_authenticated:
+                raise ValidationError(message=self.error_messages['login_invalid'], code='login_invalid')
         return super().clean()
 
     def get_user(self):

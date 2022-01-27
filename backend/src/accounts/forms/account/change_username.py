@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
@@ -21,7 +20,7 @@ class ChangeUsernameForm(forms.Form):
     )
     new_username = forms.CharField(
         label=_('Новый Username'),
-        widget=forms.PasswordInput()
+        validators=getattr(UserModel, UserModel.USERNAME_FIELD).field.validators
     )
 
     error_messages = {
@@ -37,25 +36,18 @@ class ChangeUsernameForm(forms.Form):
         super().__init__(*args, **kwargs)
 
     def clean_password(self):
-        password = self.cleaned_data['password']
-        if self.request.user.check_password(raw_password=password):
+        password = self.cleaned_data.get('password')
+        if not self.request.user.check_password(raw_password=password):
             raise ValidationError(message=self.error_messages['password_invalid'], code='password_invalid')
         return password
 
     def clean_repeat_password(self):
-        password = self.cleaned_data['password']
-        repeat_password = self.cleaned_data['repeat_password']
+        password = self.cleaned_data.get('password')
+        repeat_password = self.cleaned_data.get('repeat_password')
 
         if password != repeat_password:
             raise ValidationError(message=self.error_messages['passwords_not_match'], code='passwords_not_match')
         return repeat_password
-
-    def clean_new_username(self):
-        new_username = self.cleaned_data['new_username']
-        user = self.request.user
-        user.username = new_username
-        user.clean()
-        return new_username
 
     def save(self):
         new_username = self.cleaned_data['new_username']
