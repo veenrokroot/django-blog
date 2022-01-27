@@ -14,11 +14,11 @@ def username_unique_validator(username: str):
     """
     UserModel = get_user_model()
 
-    msg = _('Пользователь с таким username уже существует')
+    msg = _('Пользователь с таким username уже существует.')
     code = 'username_unique'
     try:
         UserModel.objects.get_by_natural_key(username=username)
-    except UserModel.DoesNotExists:
+    except UserModel.DoesNotExist:
         return None
     else:
         raise ValidationError(message=msg, code=code)
@@ -30,14 +30,14 @@ def username_characters_validator(username: str):
     :param username: username пользователя.
     :return:
     """
-    msg = _('Username содержит недопустимые символы: {unacceptable_symbols}')
+    msg = _('Username содержит недопустимые символы: {unacceptable_symbols}.')
     code = 'username_invalid'
     unacceptable_symbols = {
-        char
-        for char in username
+        char for char in username
         if not re.match(settings.USER_USERNAME_VALID_CHARACTERS_REGEX, char)
     }
     if unacceptable_symbols:
+        msg = msg.format(unacceptable_symbols=', '.join(unacceptable_symbols))
         raise ValidationError(message=msg, code=code)
     return None
 
@@ -93,7 +93,7 @@ def email_unique_validator(email: str):
     code = 'email_unique'
     try:
         UserModel.objects.get_by_natural_key(email=email)
-    except UserModel.DoesNotExists:
+    except UserModel.DoesNotExist:
         return None
     else:
         raise ValidationError(message=msg, code=code)

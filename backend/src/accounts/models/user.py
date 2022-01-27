@@ -43,14 +43,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name=_('Username'),
         help_text=_('Обязательно.'),
         unique=True,
-        max_length=settings.USER_USERNAME_MAXIMUM_LENGTH,
+        max_length=32,
         validators=(
             validators.user.username_minimum_length_validator,
-            validators.user.username_minimum_length_validator,
+            validators.user.username_maximum_length_validator,
             validators.user.username_first_symbol_validator,
             validators.user.username_characters_validator,
             validators.user.username_unique_validator,
-        )
+        ),
+        error_messages={
+            'max_length': None
+        }
     )
     email = models.EmailField(
         verbose_name=_('E-mail'),
@@ -58,6 +61,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=(
             validators.user.email_unique_validator,
         )
+    )
+
+    is_staff = models.BooleanField(
+        verbose_name=_('Статус персонала'),
+        help_text=_('Можно настроить доступ к админ-панеле сайта')
     )
 
     USERNAME_FIELD = 'username'
